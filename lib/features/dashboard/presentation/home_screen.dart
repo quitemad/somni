@@ -704,7 +704,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           );
                         } else if (state is DashboardLoaded) {
                           final dashboard = state.dashboard;
+                          weekly.clear();
                           weekly.addAll(state.weeklySessions);
+
                           final int? bpm = state.todayMetrics != null ? (state.todayMetrics!['heart_rate'] as int?) : null;
                           // final sleepScore = dashboard.lastSleep?.sleepScore ?? dashboard.weeklyAverageScore ?? 0;
                           final sleepScore = (weekly.fold<int>(0, (a,b)=>a+(b.sleepScore??0))/weekly.length).ceil();
@@ -780,6 +782,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                     Expanded(
                                       child: WeekScoreChart(sessions: weekly),
                                     ),
+
+                                    Row(
+                                      children: List.generate(weekly.length, (index) => Text('${weekly[index].durationMinutes}  ')),),
+
                                   ],
                                 ),
                               ),

@@ -99,13 +99,14 @@ import 'package:go_router/go_router.dart';
 import 'package:get_it/get_it.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:somni/chat_bot_screen.dart';
+import 'package:somni/features/chatbot/presentation/chat_bot_screen.dart';
 import 'package:somni/profile_screen.dart';
 import 'package:somni/schedule_screen.dart';
 import 'core/storage/token_storage.dart';
 import 'package:curved_labeled_navigation_bar/curved_navigation_bar.dart';
 import 'features/auth/presentation/login_screen.dart';
 import 'features/auth/presentation/register_screen.dart';
+import 'features/chatbot/presentation/bloc/chatbot_bloc.dart';
 import 'features/dashboard/presentation/home_screen.dart';
 import 'features/dashboard/presentation/bloc/dashboard_bloc.dart';
 import 'features/dashboard/presentation/bloc/dashboard_event.dart';
@@ -143,6 +144,9 @@ class AppRoutes {
                 create: (_) => sl<DashboardBloc>(),
                 // Optionally load dashboard immediately:
                 // create: (_) => sl<DashboardBloc>()..add(LoadDashboardRequested()),
+              ),
+              BlocProvider<ChatbotBloc>(
+                create: (_) => sl<ChatbotBloc>(),
               ),
             ],
             child: Scaffold(

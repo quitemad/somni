@@ -103,6 +103,12 @@ import '../features/auth/domain/usecases/get_profile_usecase.dart';
 import '../features/auth/domain/usecases/logout_usecase.dart';
 import '../features/auth/presentation/bloc/auth_bloc.dart';
 
+import '../features/chatbot/data/datasources/chatbot_remote_datasource.dart';
+import '../features/chatbot/data/datasources/chatbot_remote_datasource_impl.dart';
+import '../features/chatbot/domain/repositories/chatbot_repository.dart';
+import '../features/chatbot/domain/usecases/start_session_usecase.dart';
+import '../features/chatbot/domain/usecases/submit_answe_usecase.dart';
+import '../features/chatbot/presentation/bloc/chatbot_bloc.dart';
 import '../features/dashboard/data/datasources/dashboard_remote_data_source.dart';
 import '../features/dashboard/data/datasources/dashboard_remote_data_source_impl.dart';
 import '../features/dashboard/data/repositories/dashboard_repository_impl.dart';
@@ -174,4 +180,28 @@ Future<void> init() async {
   // Sleep registrations (SharedPreferences is already registered above)
   sl.registerLazySingleton(() => SleepRemoteDataSource(sl<DioClient>().dio));
   sl.registerLazySingleton<SleepRepository>(() => SleepRepository(sl<SleepRemoteDataSource>(), sl<SharedPreferences>()));
+
+
+
+  // Data source
+  sl.registerLazySingleton<ChatbotRemoteDataSource>(
+        () => ChatbotRemoteDataSource(sl<DioClient>().dio),
+  );
+
+  // Repository
+  sl.registerLazySingleton<ChatbotRepository>(
+        () => ChatbotRepositoryImpl(sl()),
+  );
+
+  // Use cases
+  sl.registerLazySingleton(() => StartSessionUseCase(sl()));
+  sl.registerLazySingleton(() => SubmitAnswerUseCase(sl()));
+
+  // Bloc
+  sl.registerFactory(
+        () => ChatbotBloc(
+      startUseCase: sl(),
+      submitUseCase: sl(),
+    ),
+  );
 }
