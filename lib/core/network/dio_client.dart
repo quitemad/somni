@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'api_constants.dart';
+import 'dio_logger_interceptor.dart';
 
 class DioClient {
   final Dio dio;
@@ -14,18 +15,8 @@ class DioClient {
       },
     ),
   ) {
-    // Add Dio logger interceptor
-    dio.interceptors.add(
-      LogInterceptor(
-        request: true,
-        requestHeader: true,
-        requestBody: true,
-        responseHeader: true,
-        responseBody: true,
-        error: true,
-        logPrint: (obj) => print(obj),
-      ),
-    );
+    dio.interceptors.add(DioLoggerInterceptor());
+
   }
 
   void setToken(String token) {

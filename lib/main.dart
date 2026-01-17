@@ -1,12 +1,23 @@
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'core/injection.dart' as di;
+import 'core/storage/token_storage.dart';
+import 'features/auth/domain/usecases/get_profile_usecase.dart';
 import 'routes.dart';
 
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await di.init(); // initialize DI, token storage, SharedPreferences
+  await di.init();
+
+  final tokenStorage = sl<TokenStorage>();
+  if (tokenStorage.hasToken) {
+    try {
+      await sl<GetProfileUseCase>()();
+    } catch (e) {
+      await tokenStorage.clear();
+    }
+  }
   runApp(const MyApp());
 }
 

@@ -52,7 +52,7 @@ class WeekScoreChart extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 6),
-                Text(score > 0 ? score.toString() : '-', style: const TextStyle(color: Colors.white, fontSize: 12)),
+                Text(score > 0 ? score.toString() : '-', style: const TextStyle(color: Colors.white, fontSize: 20)),
               ],
             ),
           );

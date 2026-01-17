@@ -1,5 +1,6 @@
 // features/dashboard/domain/usecases/get_weekly_scores_usecase.dart
 
+
 import '../../data/model/sleep_session_model.dart';
 import '../reposiotries/dashboard_repository.dart';
 
@@ -16,6 +17,8 @@ class GetWeeklyScoresUseCase {
       final db = b.date ?? DateTime.fromMillisecondsSinceEpoch(0);
       return db.compareTo(da);
     });
+    // Logger().w(sessions.take(7).toList().first);
+    // Logger().w(sessions.take(7).toList().first);
     return sessions.take(7).toList();
   }
 }

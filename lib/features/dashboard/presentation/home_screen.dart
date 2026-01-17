@@ -706,7 +706,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           final dashboard = state.dashboard;
                           weekly.addAll(state.weeklySessions);
                           final int? bpm = state.todayMetrics != null ? (state.todayMetrics!['heart_rate'] as int?) : null;
-                          final sleepScore = dashboard.lastSleep?.sleepScore ?? dashboard.weeklyAverageScore ?? 0;
+                          // final sleepScore = dashboard.lastSleep?.sleepScore ?? dashboard.weeklyAverageScore ?? 0;
+                          final sleepScore = (weekly.fold<int>(0, (a,b)=>a+(b.sleepScore??0))/weekly.length).ceil();
                           return Column(
                             children: [
                               SizedBox(
@@ -714,7 +715,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                 width: MediaQuery.of(context).size.width - 50,
                                 child: Column(
                                   children: [
-                                    // Sleep score big card and bpm card row
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
@@ -730,8 +730,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                             mainAxisSize: MainAxisSize.min,
                                             children: [
                                               Text(
+                                                 softWrap: true,
                                                 '$sleepScore',
-                                                style: const TextStyle(fontSize: 48, color: Colors.white, fontWeight: FontWeight.bold),
+                                                style: const TextStyle(fontSize: 40, color: Colors.white, fontWeight: FontWeight.bold),
                                               ),
                                               const SizedBox(height: 4),
                                               const Text('Sleep Score', style: TextStyle(color: Colors.white70)),
@@ -774,7 +775,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         ),
                                       ],
                                     ),
-                                    const SizedBox(height: 12),
+                                    // const SizedBox(height: 50),
                                     // Week chart
                                     Expanded(
                                       child: WeekScoreChart(sessions: weekly),

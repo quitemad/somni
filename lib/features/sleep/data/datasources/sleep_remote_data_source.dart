@@ -65,7 +65,7 @@ class SleepRemoteDataSource {
     Map<String, dynamic>? payload,
   }) async {
     final path = ApiConstants.dailyMetrics.replaceAll('{date}', date);
-    final resp = await dio.put(path, data: payload ?? {});
+    final resp = await dio.post(path, data: payload ?? {});
     return Map<String, dynamic>.from(resp.data as Map);
   }
 
