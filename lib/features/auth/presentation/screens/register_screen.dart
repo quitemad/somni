@@ -12,12 +12,6 @@ final sl = GetIt.instance;
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
 
-  // static Widget withProvider() {
-  //   return BlocProvider(
-  //     create: (_) => sl<AuthBloc>(),
-  //     child: const RegisterPage(),
-  //   );
-  // }
 
   @override
   State<RegisterPage> createState() => _RegisterPageState();

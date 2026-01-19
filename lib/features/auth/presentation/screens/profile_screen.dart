@@ -160,6 +160,7 @@ class ProfileScreen extends StatelessWidget {
                                 context
                                     .read<AuthBloc>()
                                     .add(LogoutRequested());
+
                               },
                               icon: const Icon(
                                 Icons.logout,

@@ -1,95 +1,3 @@
-// import 'package:get_it/get_it.dart';
-// import 'package:shared_preferences/shared_preferences.dart';
-//
-// import '../features/auth/data/datasources/auth_remote_data_source_impl.dart';
-// import '../features/auth/data/datasources/auth_remote_data_source.dart';
-// import '../features/auth/data/repository/auth_repository_impl.dart';
-// import '../features/auth/domain/repository/auth_repository.dart';
-// import '../features/auth/domain/usecases/login_usecase.dart';
-// import '../features/auth/domain/usecases/register_usecase.dart';
-// import '../features/auth/domain/usecases/get_profile_usecase.dart';
-// import '../features/auth/domain/usecases/logout_usecase.dart';
-// import '../features/auth/presentation/bloc/auth_bloc.dart';
-// import '../features/dashboard/data/datasources/dashboard_remote_data_source.dart';
-// import '../features/dashboard/data/datasources/dashboard_remote_data_source_impl.dart';
-// import '../features/dashboard/data/repositories/dashboard_repository_impl.dart';
-// import '../features/dashboard/domain/reposiotries/dashboard_repository.dart';
-// import '../features/dashboard/domain/usecases/get_daily_metrics_usecase.dart';
-// import '../features/dashboard/domain/usecases/get_dashboard_usecase.dart';
-// import '../features/dashboard/domain/usecases/get_weekly_scores_usecause.dart';
-// import '../features/dashboard/presentation/bloc/dashboard_bloc.dart';
-// import '../features/sleep/data/datasources/sleep_remote_data_source.dart';
-// import '../features/sleep/data/repositories/sleep_repository.dart';
-// import 'network/dio_client.dart';
-// import 'storage/token_storage.dart';
-//
-// final sl = GetIt.instance;
-//
-// Future<void> init() async {
-//   // SharedPreferences (async)
-//   final prefs = await SharedPreferences.getInstance();
-//
-//   // Core
-//   sl.registerLazySingleton(() => DioClient()); // assumes your DioClient has default constructor
-//
-//   // Token storage (depends on DioClient)
-//   sl.registerLazySingleton<TokenStorage>(() => TokenStorage(prefs, sl<DioClient>()));
-//   // initialize token storage (load existing token into Dio headers)
-//   await sl<TokenStorage>().init();
-//
-//   // Data sources
-//   sl.registerLazySingleton<AuthRemoteDataSource>(
-//         () => AuthRemoteDataSourceImpl(sl<DioClient>().dio),
-//   );
-//
-//   // Repositories (AuthRepositoryImpl now expects TokenStorage)
-//   sl.registerLazySingleton<AuthRepository>(
-//         () => AuthRepositoryImpl(sl<AuthRemoteDataSource>(), sl<DioClient>(), sl<TokenStorage>()),
-//   );
-//
-//   // Use cases
-//   sl.registerLazySingleton(() => LoginUseCase(sl<AuthRepository>()));
-//   sl.registerLazySingleton(() => RegisterUseCase(sl<AuthRepository>()));
-//   sl.registerLazySingleton(() => GetProfileUseCase(sl<AuthRepository>()));
-//   sl.registerLazySingleton(() => LogoutUseCase(sl<AuthRepository>()));
-//
-//   // Bloc
-//   sl.registerFactory(
-//         () => AuthBloc(
-//       loginUseCase: sl<LoginUseCase>(),
-//       registerUseCase: sl<RegisterUseCase>(),
-//       getProfileUseCase: sl<GetProfileUseCase>(),
-//       logoutUseCase: sl<LogoutUseCase>(),
-//     ),
-//   );
-//
-//
-//   // register dashboard data source, repository, usecases, bloc
-//   sl.registerLazySingleton<DashboardRemoteDataSource>(
-//         () => DashboardRemoteDataSourceImpl(sl<DioClient>().dio),
-//   );
-//
-//   sl.registerLazySingleton<DashboardRepository>(
-//         () => DashboardRepositoryImpl(sl<DashboardRemoteDataSource>()),
-//   );
-//
-//   sl.registerLazySingleton(() => GetDashboardUseCase(sl<DashboardRepository>()));
-//   sl.registerLazySingleton(() => GetWeeklyScoresUseCase(sl<DashboardRepository>()));
-//   sl.registerLazySingleton(() => GetDailyMetricsUseCase(sl<DashboardRepository>()));
-//
-//
-//   sl.registerLazySingleton(() => SleepRemoteDataSource(sl<DioClient>().dio));
-//   sl.registerLazySingleton<SleepRepository>(() => SleepRepository(sl<SleepRemoteDataSource>(), sl<SharedPreferences>()));
-//
-//   sl.registerFactory(
-//         () => DashboardBloc(
-//       getDashboard: sl<GetDashboardUseCase>(),
-//       getWeeklyScores: sl<GetWeeklyScoresUseCase>(),
-//       getDailyMetrics: sl<GetDailyMetricsUseCase>(),
-//     ),
-//   );
-// }
-
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:somni/features/calendar/domain/usecases/calendar_add_notes_usecase.dart';
@@ -127,6 +35,12 @@ import '../../features/dashboard/domain/usecases/get_daily_metrics_usecase.dart'
 import '../../features/dashboard/domain/usecases/get_dashboard_usecase.dart';
 import '../../features/dashboard/domain/usecases/get_weekly_scores_usecause.dart';
 import '../../features/dashboard/presentation/bloc/dashboard_bloc.dart';
+import '../../features/music/data/datasources/music_remote_datasource.dart';
+import '../../features/music/data/datasources/music_remote_datasource_impl.dart';
+import '../../features/music/data/repositories/music_repository_impl.dart';
+import '../../features/music/domain/repositories/music_repository.dart';
+import '../../features/music/domain/usecases/predict_music_usecase.dart';
+import '../../features/music/presentation/bloc/music_bloc.dart';
 import '../../features/sleep/data/datasources/sleep_remote_data_source.dart';
 import '../../features/sleep/data/repositories/sleep_repository.dart';
 import '../../features/stressdetection/data/datasources/stress_remote_datasource.dart';
@@ -268,5 +182,29 @@ Future<void> init() async {
       detectStress: sl(),
     ),
   );
+
+
+  // =========================
+// Music Feature
+// =========================
+
+  sl.registerLazySingleton<MusicRemoteDataSource>(
+        () => MusicRemoteDataSourceImpl(sl<DioClient>().dio),
+  );
+
+  sl.registerLazySingleton<MusicRepository>(
+        () => MusicRepositoryImpl(sl()),
+  );
+
+  sl.registerLazySingleton(
+        () => PredictMusicUseCase(sl()),
+  );
+
+  sl.registerFactory(
+        () => MusicBloc(
+      predictMusic: sl(),
+    ),
+  );
+
 
 }

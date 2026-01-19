@@ -335,8 +335,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                       child: WeekScoreChart(sessions: weekly),
                                     ),
 
-                                    // Row(
-                                    //   children: List.generate(weekly.length, (index) => Text('${weekly[index].durationMinutes}  ')),),
 
                                   ],
                                 ),

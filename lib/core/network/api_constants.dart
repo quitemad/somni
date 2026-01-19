@@ -38,8 +38,7 @@ class ApiConstants {
   static const chatbotSessionAnswer = '/api/chatbot/session/answer';
   static const chatbotSession = '/api/chatbot/session/{sessionId}';
 
-// static const notes = '/api/notes';
-// static const tasks = '/api/tasks';
-// static const dailyMetrics = '/api/daily-metrics';
-// static const aiSleepDisorder = '/api/ai/sleep-disorder';
+  static const  musicPrediction ='/api/user/music';
+
+
 }

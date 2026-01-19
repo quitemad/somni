@@ -13,6 +13,8 @@ class ChatBotScreen extends StatefulWidget {
 }
 
 class _ChatBotScreenState extends State<ChatBotScreen> {
+  int _lastMessageCount = 0;
+
   final TextEditingController _controller = TextEditingController();
   final ScrollController _scrollController = ScrollController();
 
@@ -32,14 +34,26 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
   void initState() {
     super.initState();
     // Start chatbot session
-    context.read<ChatbotBloc>().add(ChatbotStartRequested());
+    // context.read<ChatbotBloc>().add(ChatbotStartRequested());
   }
 
   @override
   Widget build(BuildContext context) {
+    final state = context.watch<ChatbotBloc>().state;
+
+    if (state is ChatbotInitial) {
+      context.read<ChatbotBloc>().add(ChatbotStartRequested());
+    }
     return Scaffold(
-      backgroundColor: Colors.transparent,
-      appBar: AppBar(title: const Text("SleepWell Chatbot")),
+      floatingActionButton: FloatingActionButton.small(onPressed: () {
+        context.read<ChatbotBloc>().add(ChatbotStartRequested());
+        _lastMessageCount = 0;
+      },
+        child: Icon(Icons.refresh),
+      ),
+      extendBodyBehindAppBar: true,
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      appBar: AppBar(title: const Text("Chatbot"),backgroundColor: Colors.transparent,),
       body: BlocBuilder<ChatbotBloc, ChatbotState>(
         builder: (context, state) {
           List<dynamic> messages = [];
@@ -53,73 +67,171 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
             currentNode = null;
           }
 
-          return Column(
-            children: [
-              // Chat messages
-              Expanded(
-                child: ListView.builder(
-                  controller: _scrollController,
-                  padding: const EdgeInsets.all(12),
-                  itemCount: messages.length,
-                  itemBuilder: (context, index) {
-                    final msg = messages[index];
-                    final type = msg['type'] ?? 'system';
-                    final text = msg['text'] ?? '';
-
-                    if (type == 'outcome') {
-                      final actions = msg['actions'] as Map<String, dynamic>? ?? {};
-                      return _buildOutcomeCard(msg['text'], actions);
-                    }
-
-                    // Regular messages
-                    switch (type) {
-                      case 'question':
-                        return _buildMessageBubble(text, isQuestion: true);
-                      case 'answer':
-                        return _buildMessageBubble(text, isAnswer: true);
-                      case 'system':
-                      default:
-                        return _buildMessageBubble(text, isSystem: true);
-                    }
-                  },
+          return Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/images/bg_waves.jpg'),
+                fit: BoxFit.cover,
+                colorFilter: ColorFilter.mode(
+                  Colors.black54,
+                  BlendMode.darken,
                 ),
               ),
+            ),
+            child: Column(
+              children: [
+                // Chat messages
+                // Expanded(
+                //   child: ListView.builder(
+                //     controller: _scrollController,
+                //     padding: const EdgeInsets.only(top: 100,bottom: 12,left: 12,right: 12),
+                //     itemCount: messages.length,
+                //     itemBuilder: (context, index) {
+                //       final msg = messages[index];
+                //       final type = msg['type'] ?? 'system';
+                //       final text = msg['text'] ?? '';
+                //
+                //       if (type == 'outcome') {
+                //         final actions = msg['actions'] as Map<String, dynamic>? ?? {};
+                //         return _buildOutcomeCard(msg['text'], actions);
+                //       }
+                //
+                //       // Regular messages
+                //       switch (type) {
+                //         case 'question':
+                //           return _buildMessageBubble(text, isQuestion: true);
+                //         case 'answer':
+                //           return _buildMessageBubble(text, isAnswer: true);
+                //         case 'system':
+                //         default:
+                //           return _buildMessageBubble(text, isSystem: true);
+                //       }
+                //     },
+                //   ),
+                // ),
+                Expanded(
+                  child: ListView.builder(
+                    controller: _scrollController,
+                    padding: const EdgeInsets.only(
+                      top: 100,
+                      bottom: 20,
+                      left: 12,
+                      right: 12,
+                    ),
+                    itemCount: messages.length +
+                        ((state is ChatbotLoaded && currentNode != null) ? 1 : 0),
+                    itemBuilder: (context, index) {
+                      if (state is ChatbotLoaded || state is ChatbotCompleted) {
+                        final currentCount = messages.length;
 
-              // Input area (if session not completed)
-              if (state is ChatbotLoaded && currentNode != null)
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 50),
-                  child: Wrap(
-                    spacing: 50,
-                    children: currentNode.answers.map((a) {
-                      return ElevatedButton(
-                        style: ButtonStyle(
-                          elevation: WidgetStatePropertyAll(10),
-                          backgroundColor: WidgetStatePropertyAll(Theme.of(context).colorScheme.primary),
-                          foregroundColor: WidgetStatePropertyAll(Theme.of(context).colorScheme.onPrimary),
-                        ),
-                        onPressed: () {
-                          context.read<ChatbotBloc>().add(ChatbotSubmitAnswer(
-                            nodeId: currentNode!.id,
-                            answerValue: a.value,
-                            answerLabel: a.label,
-                          ));
-                          _controller.clear();
+                        if (currentCount != _lastMessageCount) {
+                          _lastMessageCount = currentCount;
                           _scrollToBottom();
-                        },
-                        child: Text(a.label,style: TextStyle(fontSize: 20),),
-                      );
-                    }).toList(),
+                        }
+                      }
+
+                      final isLastItem =
+                          index == messages.length &&
+                              state is ChatbotLoaded &&
+                              currentNode != null;
+
+                      if (isLastItem) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          child: Wrap(
+                            alignment: WrapAlignment.center,
+                            spacing: 12,
+                            runSpacing: 12,
+                            children: currentNode.answers.map((a) {
+                              return ElevatedButton(
+                                style: ButtonStyle(
+                                  elevation: const WidgetStatePropertyAll(10),
+                                  backgroundColor: WidgetStatePropertyAll(
+                                    Theme.of(context).colorScheme.primary,
+                                  ),
+                                  foregroundColor: WidgetStatePropertyAll(
+                                    Theme.of(context).colorScheme.onPrimary,
+                                  ),
+                                ),
+                                onPressed: () {
+                                  context.read<ChatbotBloc>().add(
+                                    ChatbotSubmitAnswer(
+                                      nodeId: currentNode!.id,
+                                      answerValue: a.value,
+                                      answerLabel: a.label,
+                                    ),
+                                  );
+                                  _scrollToBottom();
+                                },
+                                child: Text(
+                                  a.label,
+                                  style: const TextStyle(fontSize: 18),
+                                ),
+                              );
+                            }).toList(),
+                          ),
+                        );
+                      }
+
+                      // Normal messages
+                      final msg = messages[index];
+                      final type = msg['type'] ?? 'system';
+                      final text = msg['text'] ?? '';
+
+                      if (type == 'outcome') {
+                        final actions =
+                            msg['actions'] as Map<String, dynamic>? ?? {};
+                        return _buildOutcomeCard(msg['text'], actions);
+                      }
+
+                      switch (type) {
+                        case 'question':
+                          return _buildMessageBubble(text, isQuestion: true);
+                        case 'answer':
+                          return _buildMessageBubble(text, isAnswer: true);
+                        default:
+                          return _buildMessageBubble(text, isSystem: true);
+                      }
+                    },
                   ),
                 ),
 
-              // Loading indicator
-              if (state is ChatbotLoading)
-                const Padding(
-                  padding: EdgeInsets.all(16.0),
-                  child: CircularProgressIndicator(),
-                ),
-            ],
+                // Input area (if session not completed)
+                // if (state is ChatbotLoaded && currentNode != null)
+                //   Padding(
+                //     padding: const EdgeInsets.only(bottom: 50),
+                //     child: Wrap(
+                //       spacing: 50,
+                //       children: currentNode.answers.map((a) {
+                //         return ElevatedButton(
+                //           style: ButtonStyle(
+                //             elevation: WidgetStatePropertyAll(10),
+                //             backgroundColor: WidgetStatePropertyAll(Theme.of(context).colorScheme.primary),
+                //             foregroundColor: WidgetStatePropertyAll(Theme.of(context).colorScheme.onPrimary),
+                //           ),
+                //           onPressed: () {
+                //             context.read<ChatbotBloc>().add(ChatbotSubmitAnswer(
+                //               nodeId: currentNode!.id,
+                //               answerValue: a.value,
+                //               answerLabel: a.label,
+                //             ));
+                //             _controller.clear();
+                //             _scrollToBottom();
+                //           },
+                //           child: Text(a.label,style: TextStyle(fontSize: 20),),
+                //         );
+                //       }).toList(),
+                //     ),
+                //   ),
+
+                // Loading indicator
+                if (state is ChatbotLoading)
+                  const Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: CircularProgressIndicator(),
+                  ),
+              ],
+            ),
           );
         },
       ),

@@ -1,4 +1,3 @@
-// features/auth/presentation/bloc/auth_bloc.dart
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'auth_event.dart';
 import 'auth_state.dart';
@@ -74,7 +73,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(AuthLoading());
     try {
       await logoutUseCase();
-      emit(AuthInitial()); // treat as unauthenticated
+      emit(AuthInitial());
+      emit(AuthError('Logout successful'));// treat as unauthenticated
     } catch (e) {
       emit(AuthError('Logout failed: ${_errorMessage(e)}'));
     }

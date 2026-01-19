@@ -1,31 +1,3 @@
-// import 'package:dio/dio.dart';
-//
-// /// Remote data source that calls your backend chatbot endpoints.
-// /// Pass the app Dio instance (so it already has baseUrl and Authorization).
-// class ChatbotRemoteDataSource {
-//   final Dio dio;
-//   ChatbotRemoteDataSource(this.dio);
-//
-//   Future<Map<String, dynamic>> startSession({Map<String, dynamic>? payload});
-//
-//   Future<Map<String, dynamic>> submitAnswer({
-//     required String sessionId,
-//     required String nodeId,
-//     required dynamic answer,
-//   }) async {
-//     final res = await dio.post('/chatbot/session/answer', data: {
-//       'session_id': sessionId,
-//       'node_id': nodeId,
-//       'answer': answer,
-//     });
-//     return (res.data ?? {}) as Map<String, dynamic>;
-//   }
-//
-//   Future<Map<String, dynamic>> getSession(String sessionId) async {
-//     final res = await dio.get('/chatbot/session/$sessionId');
-//     return (res.data ?? {}) as Map<String, dynamic>;
-//   }
-// }
 
 
 import 'package:dio/dio.dart';

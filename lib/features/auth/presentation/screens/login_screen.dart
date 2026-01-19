@@ -11,14 +11,6 @@ final sl = GetIt.instance;
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
-  /// Provide the bloc via GetIt when used in routes
-  // static Widget withProvider() {
-  //   return BlocProvider(
-  //     create: (_) => sl<AuthBloc>(),
-  //     child: const LoginPage(),
-  //   );
-  // }
-
   @override
   State<LoginPage> createState() => _LoginPageState();
 }

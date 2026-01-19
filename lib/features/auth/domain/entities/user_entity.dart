@@ -1,4 +1,3 @@
-// features/auth/domain/entities/user.dart
 
 class User {
   final int id;
