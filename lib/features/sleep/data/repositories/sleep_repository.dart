@@ -123,7 +123,7 @@ class SleepRepository {
         if (localStart != null) {
           final localStartDt = DateTime.tryParse(localStart);
           if (localStartDt != null) {
-            durationMinutes = endDt != null ? endDt.difference(localStartDt).inMinutes : null;
+            durationMinutes = endDt.difference(localStartDt).inMinutes;
           }
         }
       }
@@ -133,6 +133,7 @@ class SleepRepository {
         if (durationMinutes != null) 'sleep_duration_minutes': durationMinutes,
         if (updated.containsKey('sleep_score')) 'sleep_score': updated['sleep_score'],
         if (updated.containsKey('sleep_quality')) 'quality_of_sleep': updated['sleep_quality'],
+        "date":dateStr
       };
 
       // Only call upsert if we have something useful to send

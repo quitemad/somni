@@ -38,7 +38,7 @@ class SleepRemoteDataSource {
     try {
       final resp = await dio.post(ApiConstants.sleep, data: payload);
       return Map<String, dynamic>.from(resp.data as Map);
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       if (e.response != null) {
         throw Exception('Failed to start session: ${e.response?.data}');
       }
@@ -64,7 +64,7 @@ class SleepRemoteDataSource {
     required String date,
     Map<String, dynamic>? payload,
   }) async {
-    final path = ApiConstants.dailyMetrics.replaceAll('{date}', date);
+    final path = ApiConstants.dailyMetrics.replaceAll('{date}', "");
     final resp = await dio.post(path, data: payload ?? {});
     return Map<String, dynamic>.from(resp.data as Map);
   }

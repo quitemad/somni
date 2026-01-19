@@ -63,7 +63,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(AuthLoading());
     try {
       final user = await getProfileUseCase();
-      emit(AuthAuthenticated(user));
+      emit(AuthGotProfile(user));
+      // emit(AuthAuthenticated(user));
     } catch (e) {
       emit(AuthError('Failed to load profile: ${_errorMessage(e)}'));
     }

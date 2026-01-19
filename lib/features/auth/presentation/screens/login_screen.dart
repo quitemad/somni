@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
-import '../../../../navigation_util.dart';
-import 'bloc/auth_bloc.dart';
-import 'bloc/auth_event.dart';
-import 'bloc/auth_state.dart';
+import '../../../../core/util/navigation_util.dart';
+import '../bloc/auth_bloc.dart';
+import '../bloc/auth_event.dart';
+import '../bloc/auth_state.dart';
 
 final sl = GetIt.instance;
 
@@ -12,12 +12,12 @@ class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
   /// Provide the bloc via GetIt when used in routes
-  static Widget withProvider() {
-    return BlocProvider(
-      create: (_) => sl<AuthBloc>(),
-      child: const LoginPage(),
-    );
-  }
+  // static Widget withProvider() {
+  //   return BlocProvider(
+  //     create: (_) => sl<AuthBloc>(),
+  //     child: const LoginPage(),
+  //   );
+  // }
 
   @override
   State<LoginPage> createState() => _LoginPageState();

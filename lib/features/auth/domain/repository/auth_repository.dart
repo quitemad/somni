@@ -1,5 +1,4 @@
-// features/auth/domain/repositories/auth_repository.dart
-
+import '../../data/model/user_model.dart';
 import '../entities/user_entity.dart';
 
 abstract class AuthRepository {
@@ -13,7 +12,7 @@ abstract class AuthRepository {
     required int age,
     required String occupation,
   });
-  Future<User> getProfile();
+  Future<UserModel> getProfile();
 
   Future<void> logout();
 

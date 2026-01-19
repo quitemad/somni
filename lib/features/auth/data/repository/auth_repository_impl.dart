@@ -57,10 +57,11 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<User> getProfile() async {
+  Future<UserModel> getProfile() async {
     final data = await remote.getProfile();
     final model = UserModel.fromJson(data['user'] as Map<String, dynamic>);
-    return User(id: model.id, name: model.name, email: model.email);
+    // return User(id: model.id, name: model.name, email: model.email);
+    return model;
   }
 
   @override

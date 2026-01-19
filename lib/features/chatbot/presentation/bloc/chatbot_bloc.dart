@@ -59,7 +59,7 @@ class ChatbotBloc extends Bloc<ChatbotEvent, ChatbotState> {
       );
 
       final next = raw['next'] as Map<String, dynamic>?;
-      Logger().e("${await next}");
+      Logger().e("$next");
 
       if (next == null) {
         updatedMsgs.add({'id': 'system', 'text': 'No next node returned', 'type': 'system'});

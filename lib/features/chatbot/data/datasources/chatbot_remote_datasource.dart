@@ -30,6 +30,7 @@
 
 import 'package:dio/dio.dart';
 import 'package:logger/logger.dart';
+import 'package:somni/core/network/api_constants.dart';
 
 /// Only responsible for network calls. Returns raw Map<String, dynamic>.
 class ChatbotRemoteDataSource {
@@ -37,7 +38,7 @@ class ChatbotRemoteDataSource {
   ChatbotRemoteDataSource(this.dio);
 
   Future<Map<String, dynamic>> startSession({Map<String, dynamic>? payload}) async {
-    final res = await dio.post('/api/chatbot/session/start', data: payload ?? {});
+    final res = await dio.post(ApiConstants.chatbotSessionStart, data: payload ?? {});
     return Map<String, dynamic>.from(res.data ?? {});
   }
 
@@ -46,7 +47,7 @@ class ChatbotRemoteDataSource {
     required String nodeId,
     required dynamic answer,
   }) async {
-    final res = await dio.post('/api/chatbot/session/answer', data: {
+    final res = await dio.post(ApiConstants.chatbotSessionAnswer, data: {
       'session_id': sessionId,
       'node_id': nodeId,
       'answer': answer,
@@ -56,7 +57,7 @@ class ChatbotRemoteDataSource {
   }
 
   Future<Map<String, dynamic>> getSession(String sessionId) async {
-    final res = await dio.get('/api/chatbot/session/$sessionId');
+    final res = await dio.get('${ApiConstants.chatbotSession}$sessionId');
     return Map<String, dynamic>.from(res.data ?? {});
   }
 }
