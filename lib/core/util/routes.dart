@@ -11,14 +11,16 @@ import 'package:somni/features/auth/presentation/screens/profile_screen.dart';
 import 'package:somni/features/calendar/presentation/calendar_screen.dart';
 import 'package:somni/features/music/presentation/music_screen.dart';
 import 'package:somni/features/dashboard/presentation/home_screen.dart';
+import 'package:somni/features/sleepdisorder/presentation/bloc/sleep_disorder_bloc.dart';
+import 'package:somni/features/sleepdisorder/presentation/sleep_disorder_screen.dart';
 
 import '../../features/auth/presentation/screens/register_screen.dart';
 import '../../features/auth/presentation/screens/login_screen.dart';
 
 import '../../features/chatbot/presentation/bloc/chatbot_bloc.dart';
+import '../../features/facialstressdetection/presentation/bloc/stess_bloc.dart';
 import '../../features/music/presentation/bloc/music_bloc.dart';
 import '../../features/dashboard/presentation/bloc/dashboard_bloc.dart';
-import '../../features/stressdetection/presentation/bloc/stess_bloc.dart';
 import '../../features/auth/presentation/bloc/auth_bloc.dart';
 import '../../features/auth/presentation/bloc/auth_event.dart';
 
@@ -32,6 +34,7 @@ final sl = GetIt.instance;
 /// 🔒 Cached blocs (IMPORTANT)
 final ChatbotBloc _chatbotBloc = sl<ChatbotBloc>();
 final MusicBloc _musicBloc = sl<MusicBloc>();
+final SleepDisorderBloc _disorderBloc = sl<SleepDisorderBloc>();
 
 class AppRoutes {
   static final GoRouter router = GoRouter(
@@ -69,6 +72,9 @@ class AppRoutes {
               BlocProvider<MusicBloc>.value(
                 value: _musicBloc,
               ),
+              BlocProvider<SleepDisorderBloc>.value(
+                value: _disorderBloc,
+              ),
             ],
 
             child: Scaffold(
@@ -89,15 +95,18 @@ class AppRoutes {
                       NavigationUtil.goTo(context, '/home');
                       break;
                     case 1:
-                      NavigationUtil.goTo(context, '/chat');
+                      NavigationUtil.goTo(context, '/disorder');
                       break;
                     case 2:
-                      NavigationUtil.goTo(context, '/music');
+                      NavigationUtil.goTo(context, '/chat');
                       break;
                     case 3:
-                      NavigationUtil.goTo(context, '/profile');
+                      NavigationUtil.goTo(context, '/music');
                       break;
                     case 4:
+                      NavigationUtil.goTo(context, '/profile');
+                      break;
+                    case 5:
                       NavigationUtil.goTo(context, '/schedule');
                       break;
                   }
@@ -107,6 +116,10 @@ class AppRoutes {
                   CurvedNavigationBarItem(
                     child: Icon(Icons.home, color: Colors.white),
                     label: 'Home',
+                  ),
+                  CurvedNavigationBarItem(
+                    child: Icon(Icons.single_bed_rounded, color: Colors.white),
+                    label: 'Disorder',
                   ),
                   CurvedNavigationBarItem(
                     child: Icon(Icons.chat, color: Colors.white),
@@ -133,6 +146,7 @@ class AppRoutes {
 
         routes: [
           GoRoute(path: '/home', builder: (_, __) => const HomeScreen()),
+          GoRoute(path: '/disorder', builder: (_, __) => const SleepDisorderScreen()),
           GoRoute(path: '/chat', builder: (_, __) => const ChatBotScreen()),
           GoRoute(path: '/music', builder: (_, __) => const MusicScreen()),
 
@@ -159,10 +173,11 @@ class AppRoutes {
   static int _getSelectedIndex(GoRouterState state) {
     final location = state.uri.path.toLowerCase();
     if (location.startsWith('/home')) return 0;
-    if (location.startsWith('/chat')) return 1;
-    if (location.startsWith('/music')) return 2;
-    if (location.startsWith('/profile')) return 3;
-    if (location.startsWith('/schedule')) return 4;
+    if (location.startsWith('/disorder')) return 1;
+    if (location.startsWith('/chat')) return 2;
+    if (location.startsWith('/music')) return 3;
+    if (location.startsWith('/profile')) return 4;
+    if (location.startsWith('/schedule')) return 5;
     return 0;
   }
 }

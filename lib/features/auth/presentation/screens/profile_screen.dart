@@ -1,8 +1,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 
-import '../../../stressdetection/presentation/bloc/stess_bloc.dart';
-import '../../../stressdetection/presentation/widgets/stress_detection_widget.dart';
+import '../../../facialstressdetection/presentation/bloc/stess_bloc.dart';
+import '../../../facialstressdetection/presentation/widgets/stress_detection_widget.dart';
+
 import '../bloc/auth_bloc.dart';
 import '../bloc/auth_event.dart';
 import '../bloc/auth_state.dart';

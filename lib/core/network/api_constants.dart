@@ -1,13 +1,12 @@
 class ApiConstants {
   // static const baseUrl = 'http://10.0.2.2:8080';
-  // static const baseUrl = 'http://172.25.176.1:8080';
   static const baseUrl = 'http://localhost:8080';
 
   // Auth
   static const login = '/api/auth/login';
   static const register = '/api/auth/register';
   static const me = '/api/auth/me';
-  static const logout = '/api/auth/logout'; // <-- add this
+  static const logout = '/api/auth/logout';
 
   // Sleep
   static const sleep = '/api/sleep';
@@ -39,6 +38,7 @@ class ApiConstants {
   static const chatbotSession = '/api/chatbot/session/{sessionId}';
 
   static const  musicPrediction ='/api/user/music';
+  static const  sleepDisorder ='/api/ai/sleep-disorder';
 
 
 }

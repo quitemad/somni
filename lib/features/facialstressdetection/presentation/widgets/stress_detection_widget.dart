@@ -4,10 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
-
-import '../../../stressdetection/presentation/bloc/stess_bloc.dart';
-import '../../../stressdetection/presentation/bloc/stress_event.dart';
-import '../../../stressdetection/presentation/bloc/stress_state.dart';
+import '../bloc/stess_bloc.dart';
+import '../bloc/stress_event.dart';
+import '../bloc/stress_state.dart';
 
 class FacialStressWidget extends StatefulWidget {
   const FacialStressWidget({super.key});

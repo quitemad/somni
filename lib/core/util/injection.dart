@@ -4,7 +4,6 @@ import 'package:somni/features/calendar/domain/usecases/calendar_add_notes_useca
 import 'package:somni/features/calendar/domain/usecases/calendar_get_day_detalis_usecase.dart';
 import 'package:somni/features/calendar/domain/usecases/calendar_get_month_usecase.dart';
 import 'package:somni/features/calendar/domain/usecases/calendar_update_task_status_usecase.dart';
-import 'package:somni/features/stressdetection/domain/usecases/detect_stress_from_image_usecase.dart';
 
 import '../../features/auth/data/datasources/auth_remote_data_source_impl.dart';
 import '../../features/auth/data/datasources/auth_remote_data_source.dart';
@@ -35,6 +34,12 @@ import '../../features/dashboard/domain/usecases/get_daily_metrics_usecase.dart'
 import '../../features/dashboard/domain/usecases/get_dashboard_usecase.dart';
 import '../../features/dashboard/domain/usecases/get_weekly_scores_usecause.dart';
 import '../../features/dashboard/presentation/bloc/dashboard_bloc.dart';
+import '../../features/facialstressdetection/data/datasources/stress_remote_datasource.dart';
+import '../../features/facialstressdetection/data/datasources/stress_remote_datasource_impl.dart';
+import '../../features/facialstressdetection/data/repositories/stress_repository_impl.dart';
+import '../../features/facialstressdetection/domain/repositories/stress_repository.dart';
+import '../../features/facialstressdetection/domain/usecases/detect_stress_from_image_usecase.dart';
+import '../../features/facialstressdetection/presentation/bloc/stess_bloc.dart';
 import '../../features/music/data/datasources/music_remote_datasource.dart';
 import '../../features/music/data/datasources/music_remote_datasource_impl.dart';
 import '../../features/music/data/repositories/music_repository_impl.dart';
@@ -43,11 +48,13 @@ import '../../features/music/domain/usecases/predict_music_usecase.dart';
 import '../../features/music/presentation/bloc/music_bloc.dart';
 import '../../features/sleep/data/datasources/sleep_remote_data_source.dart';
 import '../../features/sleep/data/repositories/sleep_repository.dart';
-import '../../features/stressdetection/data/datasources/stress_remote_datasource.dart';
-import '../../features/stressdetection/data/datasources/stress_remote_datasource_impl.dart';
-import '../../features/stressdetection/data/repositories/stress_repository_impl.dart';
-import '../../features/stressdetection/domain/repositories/stress_repository.dart';
-import '../../features/stressdetection/presentation/bloc/stess_bloc.dart';
+
+import '../../features/sleepdisorder/data/datasources/sleep_disorder_remote_datasource.dart';
+import '../../features/sleepdisorder/data/datasources/sleep_disorder_remote_datasource_impl.dart';
+import '../../features/sleepdisorder/data/repositories/sleep_disorder_repository.dart';
+import '../../features/sleepdisorder/domain/repositores/sleep_disorder_repository_impl.dart';
+import '../../features/sleepdisorder/domain/usecases/detect_sleep_dsorder_usecase.dart';
+import '../../features/sleepdisorder/presentation/bloc/sleep_disorder_bloc.dart';
 import '../network/dio_client.dart';
 import '../storage/token_storage.dart';
 
@@ -206,5 +213,25 @@ Future<void> init() async {
     ),
   );
 
+// =========================
+// Sleep Disorder Feature
+// =========================
+  sl.registerLazySingleton<SleepDisorderRemoteDataSource>(
+        () => SleepDisorderRemoteDataSourceImpl(
+      sl<DioClient>().dio, // ✅ your DioClient
+    ),
+  );
+
+  sl.registerLazySingleton<SleepDisorderRepository>(
+        () => SleepDisorderRepositoryImpl(sl()),
+  );
+
+  sl.registerLazySingleton(
+        () => DetectSleepDisorderUseCase(sl()),
+  );
+
+  sl.registerFactory(
+        () => SleepDisorderBloc(detect: sl()),
+  );
 
 }

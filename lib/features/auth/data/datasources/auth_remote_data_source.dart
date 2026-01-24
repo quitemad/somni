@@ -18,6 +18,6 @@ abstract class AuthRemoteDataSource {
 
   Future<Map<String, dynamic>> getProfile();
 
-  /// Add this so repository can call remote.logout()
+  /// Add this so repositories can call remote.logout()
   Future<void> logout();
 }
